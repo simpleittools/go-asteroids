@@ -28,6 +28,9 @@ func main() {
 	// so we add the player, by referencing game first
 	g.player = NewPlayer(g)
 
+	ebiten.SetWindowTitle("Go Asteroids")
+	ebiten.SetWindowSize(ScreenWidth, ScreenHeight)
+
 	err := ebiten.RunGame(g)
 	if err != nil {
 		panic(err)
