@@ -49,7 +49,7 @@ jobs:
 
       # Optional Step: Upload Artifact (built binary)
       - name: Upload build artifact
-        uses: actions/upload-artifact@v2.1.5
+        uses: actions/upload-artifact@v3
         with:
           name: go-asteroids
           path: bin/go-asteroids
