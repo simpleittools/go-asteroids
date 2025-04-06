@@ -26,7 +26,7 @@ jobs:
 
       # Step 3: Cache Go modules
       - name: Cache Go modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
@@ -45,11 +45,11 @@ jobs:
 
       # Step 6: Build the project
       - name: Build
-        run: go build -o bin/your-app-name .
+        run: go build -o bin/go-asteroids .
 
       # Optional Step: Upload Artifact (built binary)
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: your-app-name
           path: bin/your-app-name
