@@ -49,8 +49,8 @@ jobs:
 
       # Optional Step: Upload Artifact (built binary)
       - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2.1.5
         with:
-          name: your-app-name
-          path: bin/your-app-name
+          name: go-asteroids
+          path: bin/go-asteroids
 
