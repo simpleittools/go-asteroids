@@ -6,11 +6,19 @@ import (
 	"math"
 )
 
-const rotationPerSecond = math.Pi
+const (
+	rotationPerSecond = math.Pi
+	maxAcceleration   = 8.0
+)
+
+var curAcceleration float64
 
 type Player struct {
-	sprite   *ebiten.Image
-	rotation float64
+	game           *Game
+	sprite         *ebiten.Image
+	rotation       float64
+	position       Vector
+	playerVelocity float64
 }
 
 // NewPlayer is a factory method that will return a new player
@@ -19,6 +27,7 @@ func NewPlayer(game *Game) *Player {
 
 	p := &Player{
 		sprite: sprite,
+		game:   game,
 	}
 
 	return p
@@ -41,6 +50,8 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	// move back to where it has to go
 	op.GeoM.Translate(halfW, halfH)
 
+	op.GeoM.Translate(p.position.X, p.position.Y)
+
 	screen.DrawImage(p.sprite, op)
 }
 
@@ -57,5 +68,30 @@ func (p *Player) Update() {
 
 	if ebiten.IsKeyPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
 		p.rotation += speed
+	}
+
+	p.Accelerate()
+
+}
+
+func (p *Player) Accelerate() {
+	if ebiten.IsKeyPressed(ebiten.KeyUp) || ebiten.IsKeyPressed(ebiten.KeyW) {
+		if curAcceleration < maxAcceleration {
+			curAcceleration = p.playerVelocity + 4
+		}
+
+		if curAcceleration >= 8 {
+			curAcceleration = 8
+		}
+
+		p.playerVelocity = curAcceleration
+
+		// Move in the direction we are pointing
+		dx := math.Sin(p.rotation) * curAcceleration
+		dy := math.Cos(p.rotation) * -curAcceleration
+
+		// move the player on the screen
+		p.position.X += dx
+		p.position.Y += dy
 	}
 }
