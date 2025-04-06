@@ -14,7 +14,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 // Layout returns with width and height of the screen
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
+func (g *Game) Layout(outsideWidth, outsideHeight int) (ScreenWidth, ScreenHeight int) {
 	return outsideWidth, outsideHeight
 }
 

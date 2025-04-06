@@ -7,7 +7,8 @@ on:
       - dev
   pull_request:
     branches:
-      - '**' # Run for all pull requests
+      - main
+      - dev
 
 jobs:
   build:
@@ -54,9 +55,9 @@ jobs:
         run: go build -o bin/go-asteroids .
 
       # Optional Step: Upload Artifact (built binary)
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: go-asteroids
-          path: bin/go-asteroids
+#      - name: Upload build artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: go-asteroids
+#          path: bin/go-asteroids
 
