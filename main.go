@@ -8,6 +8,7 @@ type Game struct {
 
 // Update will update the information displayed on the screen
 func (g *Game) Update() error {
+	g.player.Update()
 	return nil
 }
 
