@@ -1,4 +1,4 @@
-package main
+package goasteroids
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"

@@ -1,0 +1,79 @@
+package goasteroids
+
+import "github.com/hajimehoshi/ebiten/v2"
+
+var (
+	// these variables allow us to transition from one scene to another with a fading effect
+	transitionFrom = ebiten.NewImage(ScreenWidth, ScreenHeight)
+	transitionTo   = ebiten.NewImage(ScreenWidth, ScreenHeight)
+)
+
+const transitionMaxCount = 25
+
+type Scene interface {
+	Update(state *State) error
+	Draw(screen *ebiten.Image)
+}
+
+type State struct {
+	SceneManager *SceneManager
+	Input        *Input
+}
+
+type SceneManager struct {
+	current         Scene
+	next            Scene
+	transitionCount int
+}
+
+// ebiten always requires a Draw and Update function.
+
+// Draw will draw the scene
+func (s *SceneManager) Draw(r *ebiten.Image) {
+	if s.transitionCount == 0 {
+		s.current.Draw(r)
+		return
+	}
+
+	transitionFrom.Clear()
+	s.current.Draw(transitionFrom)
+
+	transitionTo.Clear()
+	s.next.Draw(transitionTo)
+
+	r.DrawImage(transitionFrom, nil)
+
+	// this will fade from once scene, to another scene using the alpha color channel
+	alpha := 1 - float32(s.transitionCount)/float32(transitionMaxCount)
+	op := &ebiten.DrawImageOptions{}
+	op.ColorScale.ScaleAlpha(alpha)
+	r.DrawImage(transitionTo, op)
+}
+
+// Update keeps track of what step we are at in the transition
+func (s *SceneManager) Update(_ *Input) error {
+	if s.transitionCount == 0 {
+		return s.current.Update(&State{
+			SceneManager: s,
+		})
+	}
+
+	s.transitionCount--
+	if s.transitionCount > 0 {
+		return nil
+	}
+
+	s.current = s.next
+	s.next = nil
+	return nil
+}
+
+// GoToScene will move us from one scene to the other
+func (s *SceneManager) GoToScene(scene Scene) {
+	if s.current == nil {
+		s.current = scene
+	} else {
+		s.next = scene
+		s.transitionCount = transitionMaxCount
+	}
+}
